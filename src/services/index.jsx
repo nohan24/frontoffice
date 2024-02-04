@@ -57,6 +57,7 @@ export async function favoris(){
     });
 }
 
-
-
+    export async function fiche(id){
+        return axiosInstance.get("https://rest-production-e2d3.up.railway.app/annonces/" + id);
+    }
 

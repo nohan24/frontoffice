@@ -27,7 +27,6 @@ export default function Favoris(){
         <>
             <div className="flex items-center">
                 <Link to="/" className="ms-5"><Button variant="link" className="underline"><Undo2 width={18} className="mr-2"/> Retourner vers les annonces.</Button></Link>
-                <Button variant="danger" color="red" className="underline"><Trash width={18} className="mr-2"/> Vider les favoris</Button>
             </div>
             
             <div className="grid grid-cols-3 px-5 gap-y-2">
