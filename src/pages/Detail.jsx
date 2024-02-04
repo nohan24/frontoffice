@@ -10,6 +10,7 @@ import {Check, KeySquare, Mail, MoreHorizontal, TextIcon, Undo2, Zap} from "luci
 
 export default function Detail(){
     const {id} = useParams();
+
     function currencyFormat(num) {
         return num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
     }

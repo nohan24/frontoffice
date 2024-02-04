@@ -20,7 +20,7 @@ export default function Login(){
         setDisable(true)
         var formData = new FormData(e.target);
         login(formData).then((res) => {
-            setError("")
+            setError("");
             localStorage.setItem("auth", res.data.token);
             window.location.href = "/"
         }).catch((err) => {

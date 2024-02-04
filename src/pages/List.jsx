@@ -3,6 +3,7 @@ import {Button} from '../components/ui/button'
 import {Input} from '../components/ui/input'
 import {Car, Fuel, Gauge, Search, ListIcon, Banknote, Armchair, PlusSquare, Heart} from "lucide-react";
 import Autoplay from "embla-carousel-autoplay";
+import { cn } from '@/lib/utils';
 import {
     Select,
         SelectContent,
@@ -23,11 +24,13 @@ import {
     CarouselContent,
     CarouselItem
 } from "@/components/ui/carousel"
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
-import {getMarques, getCategories, getTransmissions, getCarburants} from "../services/index";
+import {removeFavoris ,addFavoris, getMarques, getCategories, getTransmissions, getCarburants, getModeles, getAnnonces} from "../services/index";
 
 export default function List(){
+    const [annonces, setAnnonces] = useState(null)
+
     const [marques, setMarques] = useState([])
     const [transmission, setTransmission] = useState([])
     const [carburant, setCarburant] = useState([])
@@ -36,15 +39,35 @@ export default function List(){
 
     const [carb, setCarb] = useState([]);
     const [trans, setTrans] = useState([]);
-    const [ma, setMa] = useState();
-    const [cat, setCat] = useState();
-    const [kmin, setKmin] = useState(null)
-    const [kmax, setKmax] = useState(null)
-    const [min, setMin] = useState(null)
-    const [max, setMax] = useState(null)
-    const [place, setPlace] = useState(null)
+    const [ma, setMa] = useState('');
+    const [mo, setMo] = useState('');
+    const [cat, setCat] = useState([]);
+    const [kmin, setKmin] = useState('')
+    const [kmax, setKmax] = useState('')
+    const [min, setMin] = useState('')
+    const [max, setMax] = useState('')
+    const [place, setPlace] = useState('')
 
     const [search, setSearch] = useState("");
+
+    function km(num) {
+        return num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
+    }
+
+    function fav(car){
+        let a = annonces.filter(o => o.voiture.id !== car.voiture.id);
+        car.favorite = !car.favorite;
+        if(car.favorite){
+            addFavoris(car.voiture.id).then(r => console.log(r.data)).catch((err)=> {
+                console.log(err.response.data.message)
+            });
+        }else{
+            removeFavoris(car.voiture.id).catch(err => {
+                console.log(err.response.data.message)
+            });
+        }
+        setAnnonces([...a, car]);
+    }
 
     useEffect(() => {
         getMarques().then((res) => {
@@ -62,6 +85,10 @@ export default function List(){
         getCategories().then((res) => {
             setCategorie(res.data)
         })
+
+        getAnnonces().then((res) => {
+            setAnnonces(res.data)
+        })
     }, []);
 
     function currencyFormat(num) {
@@ -69,6 +96,7 @@ export default function List(){
     }
     return(
         <>
+
             <div className="flex px-3 items-center mb-5">
                 <Input className="w-[400px]" placeholder="Votre recherche ici ..." value={search} onChange={(e) => {setSearch(e.target.value)}}/>
                 <Button className="flex gap-2" variant="secondary"><Search width={15} /> Rechercher</Button>
@@ -83,11 +111,17 @@ export default function List(){
                                 </h2>
 
                                 <div className="px-2">
-                                    <Accordion type="multiple" collapsible className="w-full">
+                                    <Accordion  type="multiple" collapsible className="w-full">
                                         <AccordionItem value="item-1">
                                             <AccordionTrigger><span className="flex items-center gap-4"><ListIcon absoluteStrokeWidth /> Marque & Modèle</span></AccordionTrigger>
                                             <AccordionContent>
-                                                <Select >
+
+                                                <Select value={ma} onValueChange={(e) => {
+                                                    setMa(e)
+                                                    getModeles(e).then((res) => {
+                                                        setModele(res.data)
+                                                    })
+                                                }}>
                                                     <SelectTrigger>
                                                         <SelectValue placeholder="Choisissez une marque" />
                                                     </SelectTrigger>
@@ -103,14 +137,20 @@ export default function List(){
                                                 </Select>
                                             </AccordionContent>
                                             <AccordionContent>
-                                                <Select disabled={modele.length <= 0}>
+                                                <Select value={mo} onValueChange={(e) => {
+                                                    setMo(e)
+                                                }} disabled={modele.length <= 0}>
                                                     <SelectTrigger>
                                                         <SelectValue placeholder="Modèle" />
                                                     </SelectTrigger>
                                                     <SelectContent>
-                                                        <SelectItem value="light">Light</SelectItem>
-                                                        <SelectItem value="dark">Dark</SelectItem>
-                                                        <SelectItem value="system">System</SelectItem>
+                                                        {
+                                                            modele.map((m,i) => {
+                                                                return(
+                                                                    <SelectItem key={i} value={m.modele}>{m.modele}</SelectItem>
+                                                                )
+                                                            })
+                                                        }
                                                     </SelectContent>
                                                 </Select>
                                             </AccordionContent>
@@ -277,53 +317,82 @@ export default function List(){
                     </div>
                 </div>
 
-                <div className="md:col-span-3">
-                    <div className="p-2 grid grid-cols-1 gap-1">
-                        <div className="border p-5 flex lg:flex-row md:flex-col gap-3">
-                           <div className="bg-gray-50 w-1/2">
-                               <Carousel
-                                   plugins={[
-                                   Autoplay({
-                                       delay: 3000,
-                                       stopOnInteraction: true
-                                   }),
-                               ]}>
-                                   <CarouselContent>
-                                       <CarouselItem>
-                                           <div className="lg:h-[300px]" style={{backgroundSize: 'cover',backgroundRepeat: 'no-repeat' ,backgroundImage: "url('https://www.stratstone.com/-/media/stratstone/porsche/new-cars/inline-images/911/porsche-911-turbo-720x405px.ashx?mh=1440&la=en&h=405&w=720&mw=2560&hash=D299FB63E056C28BEECACD3F622D86A9')"}}/>
-                                       </CarouselItem>
-                                       <CarouselItem>
-                                           <div className="lg:h-[300px]" style={{backgroundSize: 'cover',backgroundRepeat: 'no-repeat' ,backgroundImage: "url('https://www.stratstone.com/-/media/stratstone/porsche/new-cars/inline-images/911/porsche-911-turbo-720x405px.ashx?mh=1440&la=en&h=405&w=720&mw=2560&hash=D299FB63E056C28BEECACD3F622D86A9')"}}/>
-                                       </CarouselItem>
-                                   </CarouselContent>
+                {
+                    annonces == null ? <div className="flex items-center col-span-3 justify-center">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="50"
+                            height="50"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className={cn("animate-spin")}
+                        >
+                            <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                        </svg>
+                    </div> :
+                       annonces.map((a, i) => {
+                           return(
+                               <div key={i} className="md:col-span-3">
+                                   <div className="p-2 grid grid-cols-1 gap-1">
+                                       <div className="border p-5 flex lg:flex-row md:flex-col gap-3">
+                                           <div className="bg-gray-50 w-1/2">
+                                               <Carousel
+                                                   plugins={[
+                                                       Autoplay({
+                                                           delay: 4000
+                                                       }),
+                                                   ]}>
+                                                   <CarouselContent>
+                                                       {
+                                                           a.detailAnnonce.images.map((url, i) => {
+                                                               return(
+                                                               <CarouselItem key={i}>
+                                                                   <div className="lg:h-[350px]" style={{backgroundSize: 'contain',backgroundPosition: 'center' ,backgroundRepeat: 'no-repeat' ,backgroundImage: "url('https://rest-production-e2d3.up.railway.app/images/"+ url +"')"}}/>
+                                                               </CarouselItem>
+                                                               )
+                                                           })
+                                                       }
+                                                   </CarouselContent>
 
-                               </Carousel>
-                           </div>
-                            <div className="w-1/2 flex flex-col justify-between">
-                                <div className="h-[250px]">
-                                    <div className="flex justify-between">
-                                        <div className="w-[450px]">
-                                            <h3 style={{textOverflow: 'ellipsis'}} className="overflow-hidden whitespace-nowrap scroll-m-20 text-2xl pb-2/3 font-semibold tracking-tight">Porsche 911 Turbo S </h3>
-                                        </div>
-                                        <div>
-                                            <Heart className="cursor-pointer" fill="red" color="red" />
-                                        </div>
-                                    </div>
-                                    <div className="mb-5">
-                                        <p className="text-sm text-muted-foreground">45.000 Km | Diesel | Automatique</p>
-                                    </div>
-                                    <div>
-                                        <p className="card-description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium adipisci aliquid aperiam at atque consequatur corporis deleniti deserunt dicta dolor dolores eius eligendi eos ex fugit laborum minima natus necessitatibus numquam officiis placeat possimus quaerat quas, qui reprehenderit sint sunt temporibus ullam vel veniam. Ad, amet, consequatur deleniti fugiat libero maiores, maxime minima nostrum officia provident quas ratione rem sed temporibus ullam? Consequuntur, deleniti distinctio esse odio odit officia quod sunt! A accusamus adipisci aperiam, delectus distinctio doloremque doloribus error in, laborum libero magni modi natus nemo nostrum numquam porro quae quam quas quos ratione repudiandae saepe sint sit sunt temporibus ullam, veritatis. Accusamus aliquam animi blanditiis culpa cum dicta dolorum ducimus ea earum, et facere fuga hic id impedit incidunt libero, magnam molestias natus nostrum odio officiis quasi, sequi sit temporibus unde voluptatem voluptatum. Architecto corporis delectus error illum non obcaecati porro recusandae sit tempora tenetur. Eaque et illo magni molestiae nisi placeat voluptate! Ducimus earum iusto laboriosam magni nam tempora? Asperiores at beatae error, neque nihil nisi obcaecati optio. Assumenda dignissimos dolorum eveniet nam nostrum perspiciatis praesentium quia quo! A assumenda eos explicabo hic impedit ipsam, quasi ut. Ab at consequuntur cupiditate doloremque eaque maxime, quibusdam repellendus vitae.</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-center justify-between">
-                                    <Link to="/detail/1"><Button>Détail</Button></Link>
-                                    <h3 className="scroll-m-20 text-2xl pb-2/3 tracking-tight">{currencyFormat(120000000)} MGA </h3>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                                               </Carousel>
+                                           </div>
+                                           <div className="w-1/2 flex flex-col justify-between">
+                                               <div className="h-[250px]">
+                                                   <div className="flex justify-between">
+                                                       <div className="w-[450px]">
+                                                           <h3 style={{textOverflow: 'ellipsis'}} className="overflow-hidden whitespace-nowrap scroll-m-20 text-2xl pb-2/3 font-semibold tracking-tight">{a.detailAnnonce.titre_voiture}</h3>
+                                                       </div>
+                                                       <div>
+                                                           {
+                                                               localStorage.getItem("auth") != null ?  <Heart onClick={() => {
+                                                                    fav(a)
+                                                               }} className="cursor-pointer" fill={a.favorite ? "red": "none"} color={a.favorite ? "red": "#333"} /> : ""
+                                                           }
+                                                       </div>
+                                                   </div>
+                                                   <div className="mb-5">
+                                                       <p className="text-sm text-muted-foreground">{km(a.detailAnnonce.kilometrage)} Km | {a.detailAnnonce.carburant} | {a.detailAnnonce.transmission}</p>
+                                                   </div>
+                                                   <div>
+                                                       <p className="card-description">{a.detailAnnonce.description_supplementaire}</p>
+                                                   </div>
+                                               </div>
+                                               <div className="flex items-center justify-between">
+                                                   <Link to={"/detail/" + a.voiture.id}><Button>Détail</Button></Link>
+                                                   <h3 className="scroll-m-20 text-2xl pb-2/3 tracking-tight">{currencyFormat(a.voiture.prix)} MGA </h3>
+                                               </div>
+                                           </div>
+                                       </div>
+                                   </div>
+                               </div>
+                           )
+                       })
+                }
+
             </div>
         </>
     )
