@@ -1,6 +1,6 @@
 import {Link, Outlet} from "react-router-dom";
 import { Separator } from "@/components/ui/separator"
-import {Heart, LogIn, LogOut, MessageSquareIcon} from "lucide-react";
+import {Heart, Home, LogIn, LogOut, MessageSquareIcon} from "lucide-react";
 import logo from "../assets/fav.ico"
 export default function Header(){
     var connected = localStorage.getItem("auth") != null;
@@ -11,6 +11,11 @@ export default function Header(){
                     <img src={logo} width={50} alt="logo"/>
                 </Link>
                 <nav className="ml-auto flex gap-4 sm:gap-6">
+                    <Link  className="text-sm hover:underline font-medium underline-offset-4" to="/">
+                        <div className="flex items-center gap-1">
+                            <Home  width={18}/> Annonces
+                        </div>
+                    </Link>
                     {
                         connected ?
                         <>

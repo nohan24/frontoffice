@@ -6,7 +6,7 @@ import {
     Next, Prev
 } from "@/components/ui/carousel";
 import {Button} from "@/components/ui/button";
-import {KeySquare, Mail, MoreHorizontal, TextIcon, Undo2, Zap} from "lucide-react";
+import {Check, KeySquare, Mail, MoreHorizontal, TextIcon, Undo2, Zap} from "lucide-react";
 
 export default function Detail(){
     const {id} = useParams();
@@ -134,17 +134,17 @@ export default function Detail(){
                         <div className="border p-5 mx-10" style={{borderTop: 'none'}}>
                             <div className="grid grid-cols-2 gap-y-2">
                                 <span className="text-sm text-gray-800 col-span-1">
-                                    Marque
+                                    Capacité
                                 </span>
                                 <span className="font-semibold text-sm text-gray-800 col-span-1">
-                                    Volkwagen
+                                    123 kWh
                                 </span>
 
                                 <span className="text-sm text-gray-800 col-span-1">
-                                    Modèle
+                                    Consommation
                                 </span>
                                 <span className="font-semibold text-sm text-gray-800 col-span-1">
-                                    Golf
+                                    17 kWh / 100 Km
                                 </span>
 
                             </div>
@@ -155,7 +155,27 @@ export default function Detail(){
                         <div className="px-5 py-4 mx-10" style={{background: '-webkit-gradient(linear, left top, left bottom, from(#f5f5f5), to(#ededed))', color:' #4f4f4f'}}>                            <h2 className="scroll-m-20 text-xl pb-2/3 font-semibold tracking-tight flex items-center gap-2"><KeySquare /> Equipements</h2>
                         </div>
                         <div className="border p-5 mx-10" style={{borderTop: 'none'}}>
-                            equipement
+                            <div className="grid grid-cols-3 gap-y-2">
+                                <span className="flex items-center gap-2 text-sm text-gray-800">
+                                    <Check color="green" size={16} /> Caméra de recul
+                                </span>
+                                <span className="flex items-center gap-2 text-sm text-gray-800">
+                                    <Check color="green" size={16} /> Climatisation
+                                </span>
+                                <span className="flex items-center gap-2 text-sm text-gray-800">
+                                    <Check color="green" size={16} /> Toit ouvrant automatique
+                                </span>
+
+                                <span className="flex items-center gap-2 text-sm text-gray-800">
+                                    <Check color="green" size={16} /> Caméra de recul
+                                </span>
+                                <span className="flex items-center gap-2 text-sm text-gray-800">
+                                    <Check color="green" size={16} /> Climatisation
+                                </span>
+                                <span className="flex items-center gap-2 text-sm text-gray-800">
+                                    <Check color="green" size={16} /> Toit ouvrant automatique
+                                </span>
+                            </div>
                         </div>
                     </div>
 
@@ -175,7 +195,7 @@ export default function Detail(){
 
                     <div className="p-5 border" style={{borderTop: 'none'}}>
                         <div className="mb-5">
-                            <Button variant="orange" className="flex items-center gap-4"><Mail /> Contactez le propriétaire</Button>
+                            <Button variant="orange" className="flex items-center gap-4"><Mail /> Contacter le propriétaire</Button>
                         </div>
                         <div>
                             <h3 className="scroll-m-20 text-xl pb-2/3 font-semibold text-center tracking-tight">Prix : {currencyFormat(120000000)} MGA </h3>

@@ -306,7 +306,7 @@ export default function List(){
                                             <h3 style={{textOverflow: 'ellipsis'}} className="overflow-hidden whitespace-nowrap scroll-m-20 text-2xl pb-2/3 font-semibold tracking-tight">Porsche 911 Turbo S </h3>
                                         </div>
                                         <div>
-                                            <Heart className="cursor-pointer"/>
+                                            <Heart className="cursor-pointer" fill="red" color="red" />
                                         </div>
                                     </div>
                                     <div className="mb-5">
