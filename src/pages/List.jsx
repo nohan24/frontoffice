@@ -336,7 +336,7 @@ export default function List(){
                     </div> :
                        annonces.map((a, i) => {
                            return(
-                               <div key={i} className="md:col-span-3">
+                               <div key={i} className="md:col-span-3 md:col-start-2">
                                    <div className="p-2 grid grid-cols-1 gap-1">
                                        <div className="border p-5 flex lg:flex-row md:flex-col gap-3">
                                            <div className="bg-gray-50 w-1/2">
