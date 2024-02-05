@@ -187,7 +187,7 @@ export default function Detail(){
                             </div>
 
                             {
-                                detail.detailAnnonce.description_supplementaire != null ?
+                                detail.detailAnnonce.description_supplementaire != '' ?
                                     <div className="mt-3">
                                         <div className="px-5 py-4 mx-10" style={{background: '-webkit-gradient(linear, left top, left bottom, from(#f5f5f5), to(#ededed))', color:' #4f4f4f'}}>
                                             <h2 className="scroll-m-20 text-xl pb-2/3 font-semibold tracking-tight flex items-center gap-2"><MoreHorizontal /> Description supplémentaire</h2>
