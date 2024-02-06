@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/carousel"
 import {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
-import {removeFavoris ,addFavoris, getMarques, getCategories, getTransmissions, getCarburants, getModeles, getAnnonces} from "../services/index";
+import {filtrer, searchs, removeFavoris ,addFavoris, getMarques, getCategories, getTransmissions, getCarburants, getModeles, getAnnonces} from "../services/index";
 
 export default function List(){
     const [annonces, setAnnonces] = useState(null)
@@ -94,12 +94,51 @@ export default function List(){
     function currencyFormat(num) {
         return num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
     }
+
+    function recherche(){
+        setAnnonces(null)
+        if(search === ""){
+            getAnnonces().then((res) => {
+                setAnnonces(res.data)
+            })
+        }else{
+
+        searchs(search).then((res) => {
+            setAnnonces(res.data)
+        }).catch((err) => {
+            alert(err.response.data)
+        })
+        }
+    }
+
+    function avance(){
+        let s = {
+            marque: ma,
+            transmission: trans,
+            modele: mo,
+            categorie: cat,
+            carburant: carb,
+            prixmin: min !== "" ? parseInt(min) : 0,
+            prixmax: !isNaN(parseInt(max)) ? parseInt(max) : 100000000000,
+            kmin: !isNaN(parseInt(kmin)) ? parseInt(kmin): 0,
+            kmax: !isNaN(parseInt(kmax)) ? parseInt(kmax) : 10000000,
+            place: !isNaN(parseInt(place)) ? parseInt(place) : 1
+        }
+        setAnnonces(null)
+        filtrer(s).then((res) => {
+            setAnnonces(res.data)
+        }).catch(err => {
+            console.log(err.response.data)
+        })
+    }
     return(
         <>
 
             <div className="flex px-3 items-center mb-5">
                 <Input className="w-[400px]" placeholder="Votre recherche ici ..." value={search} onChange={(e) => {setSearch(e.target.value)}}/>
-                <Button className="flex gap-2" variant="secondary"><Search width={15} /> Rechercher</Button>
+                <Button className="flex gap-2" variant="secondary" onClick={() => {
+                    recherche()
+                }}><Search width={15} /> Rechercher</Button>
             </div>
             <div className="grid md:grid-cols-4 sm:grid-cols-1">
                 <div className="md:col-span-1">
@@ -311,6 +350,10 @@ export default function List(){
                                             </AccordionContent>
                                         </AccordionItem>
                                     </Accordion>
+
+                                    <Button className="flex gap-2 mt-2" variant="secondary" onClick={() => {
+                                        avance()
+                                    }}><Search width={15}  /> Rechercher</Button>
                                 </div>
                             </div>
                         </div>

@@ -62,3 +62,18 @@ export async function favoris(){
         return axiosInstance.get("https://rest-production-e2d3.up.railway.app/annonces/" + id);
     }
 
+
+export async function searchs(s){
+    return axiosInstance.get("https://rest-production-e2d3.up.railway.app/annonces/search?i=" + s);
+}
+
+export async function filtrer(s){
+    let data = JSON.stringify(s);
+    return axiosInstance.post("https://rest-production-e2d3.up.railway.app/annonces/filtrer", data,
+        {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }
+        );
+}
