@@ -55,18 +55,24 @@ export default function List(){
     }
 
     function fav(car){
-        let a = annonces.filter(o => o.voiture.id !== car.voiture.id);
+        let a = []
+        a = annonces.map((o)=> {
+            if(o.voiture.id === car.voiture.id){
+                return {...o, favorite: !car.favorite}
+            }
+            return o
+        })
+        setAnnonces(a)
         car.favorite = !car.favorite;
         if(car.favorite){
-            addFavoris(car.voiture.id).then(r => console.log(r.data)).catch((err)=> {
+            addFavoris(car.voiture.id).then(r => console.log("")).catch((err)=> {
                 console.log(err.response.data.message)
             });
         }else{
             removeFavoris(car.voiture.id).catch(err => {
                 console.log(err.response.data.message)
             });
-        }
-        setAnnonces([...a, car]);
+        };
     }
 
     useEffect(() => {
@@ -377,10 +383,10 @@ export default function List(){
                             <path d="M21 12a9 9 0 1 1-6.219-8.56" />
                         </svg>
                     </div> :
-                       annonces.map((a, i) => {
+                               <div className="md:col-span-3 md:col-start-2">
+                                   { annonces.map((a, i) => {
                            return(
-                               <div key={i} className="md:col-span-3 md:col-start-2">
-                                   <div className="p-2 grid grid-cols-1 gap-1">
+                                   <div key={i} className="p-2 grid grid-cols-1 gap-1">
                                        <div className="border p-5 flex lg:flex-row md:flex-col gap-3">
                                            <div className="bg-gray-50 w-1/2">
                                                <Carousel
@@ -430,10 +436,9 @@ export default function List(){
                                                </div>
                                            </div>
                                        </div>
-                                   </div>
-                               </div>
+                                 </div>
                            )
-                       })
+                       })}</div>
                 }
 
             </div>
