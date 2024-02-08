@@ -4,7 +4,7 @@ import {Undo2, Trash, Heart} from "lucide-react";
 import {Carousel, CarouselContent, CarouselItem} from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import {useEffect, useState} from "react";
-import {favoris} from "@/services/index";
+import {favoris, removeFavoris} from "@/services/index";
 import {cn} from "@/lib/utils";
 
 export default function Favoris(){
@@ -14,6 +14,14 @@ export default function Favoris(){
             setFav(res.data);
         })
     }, []);
+
+    function retirer(car){
+        let c = fav.filter((c) => c.voiture.id !== car.voiture.id);
+        setFav(c)
+        removeFavoris(car.voiture.id).catch(err => {
+            console.log(err.response.data.message)
+        });
+    }
 
     function km(num) {
         return num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
@@ -90,7 +98,12 @@ export default function Favoris(){
                                                         </div>
                                                     </div>
                                                     <div className="flex items-center justify-between">
-                                                        <Link to={"/detail/" + a.voiture.id}><Button>Détail</Button><Button variant="destructive">Retirer des favoirs</Button></Link>
+                                                        <div>
+                                                            <Link to={"/detail/" + a.voiture.id}><Button>Détail</Button></Link>
+                                                            <Button variant="destructive" onClick={() => {
+                                                                retirer(a);
+                                                            }}>Retirer des favoirs</Button>
+                                                        </div>
                                                         <h3 className="scroll-m-20 text-2xl pb-2/3 tracking-tight">{currencyFormat(a.voiture.prix)} MGA </h3>
                                                     </div>
                                                 </div>
