@@ -1,4 +1,4 @@
-import {Link, useParams} from "react-router-dom";
+import {Link, redirect, useParams} from "react-router-dom";
 import {
     Carousel,
     CarouselContent,
@@ -12,7 +12,6 @@ import {useEffect, useState} from "react";
 import {cn} from "@/lib/utils";
 export default function Detail(){
     const {id} = useParams();
-
     function currencyFormat(num) {
         return num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
     }
@@ -187,7 +186,7 @@ export default function Detail(){
                             </div>
 
                             {
-                                detail.detailAnnonce.description_supplementaire != '' ?
+                                detail.detailAnnonce.description_supplementaire !== '' ?
                                     <div className="mt-3">
                                         <div className="px-5 py-4 mx-10" style={{background: '-webkit-gradient(linear, left top, left bottom, from(#f5f5f5), to(#ededed))', color:' #4f4f4f'}}>
                                             <h2 className="scroll-m-20 text-xl pb-2/3 font-semibold tracking-tight flex items-center gap-2"><MoreHorizontal /> Description supplémentaire</h2>
@@ -209,7 +208,9 @@ export default function Detail(){
 
                             <div className="p-5 border" style={{borderTop: 'none'}}>
                                 <div className="mb-5">
-                                    <Button variant="orange" className="flex items-center gap-4"><Mail /> Contacter le propriétaire</Button>
+                                    <Button variant="orange" onClick={() => {
+                                        window.location.href = "/message/"+ detail.voiture.owner + "/" + detail.voiture.username
+                                    }} className="flex items-center gap-4"><Mail /> Contacter le propriétaire</Button>
                                 </div>
                                 <div>
                                     <h3 className="scroll-m-20 text-xl pb-2/3 font-semibold text-center tracking-tight">Prix : {currencyFormat(detail.voiture.prix)} MGA </h3>

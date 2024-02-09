@@ -15,10 +15,15 @@ import {useState} from "react";
 export default function Login(){
     const [disable, setDisable] = useState(false);
     const [error, setError] = useState("")
+    const [user, setUser] = useState("nohan@gmail.com");
+    const [pass, setPass] = useState("root")
     function log(e){
         e.preventDefault();
         setDisable(true)
-        var formData = new FormData(e.target);
+        var formData = new FormData();
+        formData.set("email", user);
+        formData.set("password", pass);
+
         login(formData).then((res) => {
             setError("");
             localStorage.setItem("auth", res.data.token);
@@ -45,11 +50,11 @@ export default function Login(){
                             <div className="grid w-full items-center gap-4">
                                 <div className="flex flex-col space-y-1.5">
                                     <Label htmlFor="name">Email</Label>
-                                    <Input name="email" type="email"/>
+                                    <Input name="email" type="email" value={user} onChange={(e) => {setUser(e.target.value)}}/>
                                 </div>
                                 <div className="flex flex-col space-y-1.5">
                                     <Label htmlFor="framework">Mot de passe</Label>
-                                    <Input type="password" name="password"/>
+                                    <Input type="password" name="password" onChange={(e) => {setPass(e.target.value)}} value={pass}/>
                                 </div>
                             </div>
                     </CardContent>

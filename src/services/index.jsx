@@ -77,3 +77,27 @@ export async function filtrer(s){
         }
         );
 }
+
+export async function chats(){
+    let token = localStorage.getItem("auth");
+    return axiosInstance.get("https://rest-production-e2d3.up.railway.app/chats",{
+        headers: {"Authorization" : `Bearer ${token}`}
+    });
+}
+
+export async function mess(id){
+    let token = localStorage.getItem("auth");
+    return axiosInstance.get("https://rest-production-e2d3.up.railway.app/messages/chats/" + id,{
+        headers: {
+            "Authorization" : `Bearer ${token}`
+        }
+    });
+}
+
+export async function send(data){
+    let token = localStorage.getItem("auth");
+    return axiosInstance.post("https://rest-production-e2d3.up.railway.app/messages", data, {
+        headers: {"Authorization" : `Bearer ${token}`,
+            'Content-Type': 'application/json'}
+    });
+}

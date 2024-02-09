@@ -22,6 +22,7 @@ function App() {
               <Route path="/login" element={<Login/>}/>
               <Route path="/logout" element={<Logout/>}/>
               <Route path="/detail/:id" element={<Detail/>}/>
+              <Route path="/message/:user/:username" element={ connected ? <Message/> : <Navigate to="/login"/>}/>
           </Routes>
       </>
   )
