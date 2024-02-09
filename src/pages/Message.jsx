@@ -31,7 +31,7 @@ export default function Message(){
         chats().then((res) => {
             setChats(res.data)
         }).catch((err) => {
-            alert(err.response.data)
+          
         })
     }, [])
 
