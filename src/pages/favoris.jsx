@@ -74,7 +74,7 @@ export default function Favoris(){
                                                                 a.detailAnnonce.images.map((url, i) => {
                                                                     return(
                                                                         <CarouselItem key={i}>
-                                                                            <div className="lg:h-[350px]" style={{backgroundSize: 'cover',backgroundPosition: 'center' ,backgroundRepeat: 'no-repeat' ,backgroundImage: "url('https://rest-production-9975.up.railway.app/images/"+ url +"')"}}/>
+                                                                            <div className="lg:h-[350px]" style={{backgroundSize: 'cover',backgroundPosition: 'center' ,backgroundRepeat: 'no-repeat' ,backgroundImage: "url('https://rest-production-c243.up.railway.app/images/"+ url +"')"}}/>
                                                                         </CarouselItem>
                                                                     )
                                                                 })
